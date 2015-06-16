@@ -18,14 +18,14 @@ library(ggplot2)
 # set constants
 lambda <- 0.2 # lambda for rexp
 n <- 40 # number of exponetials
-numberOfSimulations <- 1000 # number of tests
+nSimulation <- 1000 # number of tests
 
 # set the seed to create reproducability
 set.seed(1125556665)
 
-# run the test resulting in n x numberOfSimulations matrix
-exponentialDistributions <- matrix(data=rexp(n * numberOfSimulations, lambda), nrow=numberOfSimulations)
-exponentialDistributionMeans <- data.frame(means=apply(exponentialDistributions, 1, mean))
+# run the test resulting in n x nSimulation matrix
+expDist <- matrix(data=rexp(n * nSimulation, lambda), nrow=nSimulation)
+expDistMeans <- data.frame(means=apply(expDist, 1, mean))
 ```
 
 ![](stat-inference-project1_files/figure-html/unnamed-chunk-2-1.png) 
@@ -39,7 +39,7 @@ $\mu= \frac{1}{\lambda}$
 
 ```r
 mu <- 1/lambda
-mu
+print(mu)
 ```
 
 ```
@@ -50,15 +50,16 @@ Let $\bar X$ be the average sample mean of 1000 simulations of 40 randomly sampl
 
 
 ```r
-meanOfMeans <- mean(exponentialDistributionMeans$means)
-meanOfMeans
+meanOfMeans <- mean(expDistMeans$means)
+print(meanOfMeans)
 ```
 
 ```
 ## [1] 5.027155
 ```
 
-As you can see the expected mean and the avarage sample mean are very close 
+The expected mean and the avarage sample mean are very close. 
+
 
 
 ## Sample Variance versus Theoretical Variance
@@ -71,7 +72,7 @@ $\sigma = \frac{1/\lambda}{\sqrt{n}}$
 
 ```r
 sd <- 1/lambda/sqrt(n)
-sd
+print(sd)
 ```
 
 ```
@@ -85,18 +86,18 @@ $Var = \sigma^2$
 
 ```r
 Var <- sd^2
-Var
+print(Var)
 ```
 
 ```
 ## [1] 0.625
 ```
 
-Let $Var_x$ be the variance of the average sample mean of 1000 simulations of 40 randomly sampled exponential distribution, and $\sigma_x$ the corresponding standard deviation.
+suppose $Var_x$ be the variance of the average sample mean of 1000 simulations of 40 randomly sampled exponential distribution, and $\sigma_x$ the corresponding standard deviation.
 
 ```r
-sd_x <- sd(exponentialDistributionMeans$means)
-sd_x
+sd_x <- sd(expDistMeans$means)
+print(sd_x)
 ```
 
 ```
@@ -104,30 +105,31 @@ sd_x
 ```
 
 ```r
-Var_x <- var(exponentialDistributionMeans$means)
-Var_x
+Var_x <- var(expDistMeans$means)
+print(Var_x)
 ```
 
 ```
 ## [1] 0.6649713
 ```
 
-As you can see the standard deviations are very close
-Since variance is the square of the standard deviations, minor differnces will we enhanced, but are still pretty close.
+From the results, standard deviations are very close. 
 
 ## Distribution
 
-Comparing the population means & standard deviation with a normal distribution of the expected values. Added lines for the calculated and expected means
+Let us now compare the population means & standard deviation with a normal distribution of the expected values. Please see the following graphs. 
+Special lines were added in the graph to differentiate between the population means and the simulation means. 
+
 
 
 ```r
 # plot the means
-ggplot(data = exponentialDistributionMeans, aes(x = means)) + 
+ggplot(data = expDistMeans, aes(x = means)) + 
   geom_histogram(binwidth=0.1, aes(y=..density..), alpha=0.2) + 
-  stat_function(fun = dnorm, arg = list(mean = mu , sd = sd), colour = "red", size=1) + 
-  geom_vline(xintercept = mu, size=1, colour="#CC0000") + 
+  stat_function(fun = dnorm, arg = list(mean = mu , sd = sd), colour = "magenta", size=1) + 
+  geom_vline(xintercept = mu, size=1, colour="magenta") + 
   geom_density(colour="blue", size=1) +
-  geom_vline(xintercept = meanOfMeans, size=1, colour="#0000CC") + 
+  geom_vline(xintercept = meanOfMeans, size=1, colour="blue") + 
   scale_x_continuous(breaks=seq(mu-3,mu+3,1), limits=c(mu-3,mu+3)) 
 ```
 
@@ -138,8 +140,8 @@ ggplot(data = exponentialDistributionMeans, aes(x = means)) +
 
 ![](stat-inference-project1_files/figure-html/unnamed-chunk-8-1.png) 
 
-As you can see from the graph, the calculated distribution of means of random sampled exponantial distributions, overlaps quite nice with the normal distribution with the expected values based on the given lamba
+From the graph, the calculated distribution of means of random sampled exponantial distributions, overlaps quite nice with the normal distribution with the expected values based on the given lamba.
 
 
 ###References
-Lecture notes
+Lecture notes, especially lecture number 7. 
